@@ -1,0 +1,63 @@
+{% extends 'base.html' %}
+{% block head %}
+
+{% endblock %}
+
+{% block body %}
+<div class="main-body">
+  <form method="post" action="/">
+    <div class="row">
+      <div class="col">
+        <input type="text" class="form-control" placeholder="Name" name="enteredurl" id='url' required />
+        <label for="url" class="form__label">Enter URL</label> <br />
+      </div>
+      <div class="col">
+        <input type="number" class="form-control" placeholder="enter citation number" name="cite" id="citeId" required />
+    <label for="citeId" class="form__label">Enter minimum number of citations</label><br/>
+    
+      </div>
+      <div class="col">
+        <button class="btn btn-dark" type="submit"> Enter URL </button>
+      </div>
+    </div>
+</form>
+  </div>
+  {{name}} <br/>
+  
+  <!-- {% for link in nameArray %}
+    {{loop.counter}} <br/> {{link}} <br/>
+  {% endfor %} -->
+  <table class="table table-striped" style="">
+    <thead>
+      <tr>
+        <th scope="col">#</th>
+        <th scope="col">Name</th>
+        <th scope="col">Author Name</th>
+        <th scope="col">Link</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% set c = 0 %}
+      {% for link in array %}
+      {% set c = c + 1 %}
+      <tr>
+        <th scope="row">{{ loop.index }}</th>
+        <td>Mark</td>
+        <td>Otto</td>
+        <td><a href='{{link}}' target="_blank"> click</td>
+      </tr>
+     
+      {% endfor %}
+      {% for auth in auther %}
+      
+      <tr>
+        <th scope="row">{{ loop.index }}</th>
+        <td></td>
+        <td>...</td>
+        <td>{{auth}}</td>
+      </tr>
+     
+      {% endfor %}
+    </tbody>
+  </table>
+{% endblock %}

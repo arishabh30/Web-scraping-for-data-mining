@@ -1,4 +1,4 @@
-#!/home/rishabh/Desktop/Codes/WebScrapingUgp/flask_app/venv/bin/python3
+#!/Users/swayamgupta/Desktop/UGP/venv/bin/python
 # -*- coding: utf-8 -*-
 import re
 import sys
