@@ -11,11 +11,11 @@
         <input type="text" class="form-control" placeholder="Name" name="enteredurl" id='url' required />
         <label for="url" class="form__label">Enter URL</label> <br />
       </div>
-      <div class="col">
+      <!-- <div class="col">
         <input type="number" class="form-control" placeholder="enter citation number" name="cite" id="citeId" required />
     <label for="citeId" class="form__label">Enter minimum number of citations</label><br/>
     
-      </div>
+      </div> -->
       <div class="col">
         <button class="btn btn-dark" type="submit"> Enter URL </button>
       </div>
@@ -38,17 +38,17 @@
     </thead>
     <tbody>
       {% set c = 0 %}
-      {% for link in array %}
+      {% for x in range(array| length) %}
       {% set c = c + 1 %}
       <tr>
         <th scope="row">{{ loop.index }}</th>
         <td>Mark</td>
-        <td>Otto</td>
-        <td><a href='{{link}}' target="_blank"> click</td>
+        <td>{{author[x]}}</td>
+        <td><a href="{{array[x]}}" target="_blank"> click</td>
       </tr>
      
       {% endfor %}
-      {% for auth in auther %}
+      <!-- {% for auth in auther %}
       
       <tr>
         <th scope="row">{{ loop.index }}</th>
@@ -57,7 +57,7 @@
         <td>{{auth}}</td>
       </tr>
      
-      {% endfor %}
+      {% endfor %} -->
     </tbody>
   </table>
 {% endblock %}

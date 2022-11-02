@@ -11,7 +11,6 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from flask import request
-from hello import index
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 
@@ -36,39 +35,20 @@ def gettingUrl(url):
     return html
 
 def gettingRef(html,ref):
-    soup_new = BeautifulSoup(html,'html.parser')  #creating an instance of the BeautifulSoup library
+    soup_new = BeautifulSoup(html.text,'html.parser')  #creating an instance of the BeautifulSoup library
     a_tags = soup_new.find('div', class_="article_content-left ui-resizable")
     count = a_tags.find_all('a',class_="ref{}".format(ref))
     len_count = len(count)
     return len_count
-
-def refLinks(html):
-    soup2 = BeautifulSoup(html,'html.parser')  #creating an instance of the BeautifulSoup library
-    links = soup2.find('div', class_="article_content-left ui-resizable")
-    paperLinksgoogleScholar=links.find_all('a',class_="google-scholar")  # creating a list containing the google scholar links for all the reference papers.
-    index=0
-    scholarLinks=[]
-    for link in paperLinksgoogleScholar:
-        scholarLinks.append(link['href'])  #A new list containing the google scholar links for only the first three papers is created. 
-        index=index+1
-    return scholarLinks
     
-def countCite(html,val):
+def countAllLinks(html):
     soup2 = BeautifulSoup(html,'html.parser')
     a_tags = soup2.find('div', class_="article_content-left ui-resizable")
     paperLinksgoogleScholar=a_tags.find_all('a',class_="google-scholar")  # creating a list containing the google scholar links for all the reference papers.
-    index=0
     scholarLinks=[]
     for link in paperLinksgoogleScholar:
         scholarLinks.append(link['href'])  #A new list containing the google scholar links for only the first three papers is created. 
-        index=index+1
-    index = 1
-    citeArray=[]
-    for link in scholarLinks:
-        count = len(a_tags.find_all('a',class_="ref{}".format(index)))
-        if int(count) >= int(val):
-            citeArray.append(link)
-    return citeArray
+    return scholarLinks
 
 def paperName(array):
     browser = webdriver.Chrome()
@@ -85,7 +65,7 @@ def paperName(array):
         names.append(name)
     return names
 
-def autherNames(citeArray):
+def authorNames(citeArray):
     authDetail=[]
     for link in citeArray:
         html = gettingUrl(link)
@@ -96,9 +76,43 @@ def autherNames(citeArray):
         # # print(authors)
         # for author in authors:
         #     authArr.append(author.text)
-        
         authDetail.append(content)
     return authDetail
+
+# def authorName(scholarLinks):
+#     for link in scholarLinks:
+#         html = gettingUrl(link)
+#         soup3 = BeautifulSoup(html,'html.parser')  
+#         content = soup3.find('div', class_="gs_a")
+
+#         if content == None:
+#             print("No Data Found")
+#         else:
+#             authors = content.find_all('a')
+#             print(authors[-1].text)
+#             name = content.text
+#             if "science" in name:
+#                 print("science")
+#             elif 'Wiley' in name:
+#                 print("wiley")
+#             elif 'nature' in name:
+#                 print("nature")
+#             elif 'sciencedirect' in name:
+#                 print("sciencedirect")
+#             elif 'Springer' in name:
+#                 print("Springer")
+#             elif 'Elsevier' in name:
+#                 print("Elsevier")
+#             elif 'mdpi' in name:
+#                 print("mdpi")
+#             elif 'ACS Publications' in name:
+#                 print("ACS Publications")
+#             elif 'ieee' in name:
+#                 print("ieee")
+#             else:
+#                 print("other")
+
+
 
 
 
