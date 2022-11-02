@@ -13,8 +13,11 @@ from selenium.webdriver.support import expected_conditions as EC
 from flask import request
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
+from fake_useragent import UserAgent
 
 def gettingUrl(url):
+    ua=UserAgent()
+    userAgent=ua.random
     options = Options()
     options.headless=True
     options.add_argument("--proxy-server='direct://'")
@@ -27,11 +30,13 @@ def gettingUrl(url):
     options.add_argument("--disable-extensions")
     options.add_argument("--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36")
     options.add_argument("--no-sandbox")
+    options.add_argument(f"user-agent=[userAgent]")
     options.add_argument("--disable-dev-shm-usage")
+    
     browser = webdriver.Chrome(service=Service(ChromeDriverManager().install()), options=options)
     browser.get(url)
     html = browser.page_source
-    print("URL " +url)
+    print("URL "+url)
     return html
 
 def gettingRef(html,ref):
@@ -67,22 +72,20 @@ def paperName(array):
 
 def authorNames(citeArray):
     authDetail=[]
+    authArr=[]
     for link in citeArray:
         html = gettingUrl(link)
         soup3 = BeautifulSoup(html, 'html.parser')
         content = soup3.find('div', class_="gs_a")
         authors = content.find_all('a')
-        authArr=[]
         # print(authors)
-        for author in authors:
-            authArr.append(author.text)
-        authDetail.append(content)
-    return authDetail
+        authArr.append(authors[-1])
+    return authArr
 
 # def authorName(scholarLinks):
 #     for link in scholarLinks:
 #         html = gettingUrl(link)
-#         soup3 = BeautifulSoup(html,'html.parser')  
+#         soup3 = BeautifulSoup(html,'html.parser')
 #         content = soup3.find('div', class_="gs_a")
 
 #         if content == None:
@@ -111,11 +114,3 @@ def authorNames(citeArray):
 #                 print("ieee")
 #             else:
 #                 print("other")
-
-
-
-
-
-
-
-    

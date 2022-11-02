@@ -14,6 +14,7 @@ def index():
         # print(html)
         citeArray = countAllLinks(html)
         auth = authorNames(citeArray)
+        print(auth)
         total=int(len(citeArray))
 
         return render_template('index.html', name=url, array=citeArray, author=auth, all=total)
