@@ -71,11 +71,11 @@ def authorNames(citeArray):
         html = gettingUrl(link)
         soup3 = BeautifulSoup(html, 'html.parser')
         content = soup3.find('div', class_="gs_a")
-        # authors = content.find_all('a')
-        # authArr=[]
-        # # print(authors)
-        # for author in authors:
-        #     authArr.append(author.text)
+        authors = content.find_all('a')
+        authArr=[]
+        # print(authors)
+        for author in authors:
+            authArr.append(author.text)
         authDetail.append(content)
     return authDetail
 
