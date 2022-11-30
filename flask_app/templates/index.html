@@ -31,9 +31,11 @@
     <thead>
       <tr>
         <th scope="col">#</th>
-        <th scope="col">Name</th>
         <th scope="col">Author Name</th>
-        <th scope="col">Link</th>
+        <th scope="col">Title</th>
+        <th scope="col">Journal Name</th>
+        <th scope="col">Year</th>
+        <th scope="col">Link (DOI)</th>
       </tr>
     </thead>
     <tbody>
@@ -42,9 +44,12 @@
       {% set c = c + 1 %}
       <tr>
         <th scope="row">{{ loop.index }}</th>
-        <td>Mark</td>
+       
         <td>{{author[x]}}</td>
         <td><a href="{{array[x]}}" target="_blank"> click</td>
+          <td>{{titleAll[x]}}</td>
+          <td>{{YearList[x]}}</td>
+          <td>{{DOIList[x]}}</td>
       </tr>
      
       {% endfor %}
