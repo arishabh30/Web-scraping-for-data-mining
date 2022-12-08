@@ -1,3 +1,4 @@
+from pickle import APPEND
 import PyPDF2
 import re
 import requests
@@ -46,7 +47,7 @@ def gettingRef(html,ref):
     len_count = len(count)
     return len_count
     
-def countAllLinks(html):
+def countAllLinksACS(html):
     soup2 = BeautifulSoup(html,'html.parser')
     a_tags = soup2.find('div', class_="article_content-left ui-resizable")
     paperLinksgoogleScholar=a_tags.find_all('a',class_="google-scholar")  # creating a list containing the google scholar links for all the reference papers.
@@ -75,25 +76,45 @@ def TitleAcs(html):
     soup = BeautifulSoup(html,'html.parser')
     content = soup.find('ol', class_='useLabel')
     titles = content.find_all('span', class_="NLM_article-title")
-    return titles
+    i=0
+    for t in titles:
+        titleAll.append(titles[i].text)
+        i=i+1
+    return titleAll
 def AcsDoi(html):
-    doi =[]
+    dois =[]
     soup = BeautifulSoup(html,'html.parser')
     content = soup.find('ol', class_='useLabel')
     doi = content.find_all('span', class_='refDoi')
-    return doi
+    i=0
+    for d in doi:
+        x = re.findall("(?<=DOI\: )(.*)", doi[i].text)
+        new = "https://doi.org/"
+        var = ' '.join(x)
+        dois.append("".join([new,var]))
+        i=i+1
+    return dois
 def AcsYear(html):
-    year =[]
+    years =[]
     soup = BeautifulSoup(html,'html.parser')
     content = soup.find('ol', class_='useLabel')
     year = content.find_all('span', class_='NLM_year')
-    return year
+    i=0
+    for y in year:
+        years.append(year[i].text)
+        i=i+1
+    return years
+    
 def AcsJournal(html):
     journal =[]
     soup = BeautifulSoup(html,'html.parser')
     content = soup.find('ol', class_='useLabel')
     journalList = content.find_all('span', class_='citation_source-journal')
-    return journalList
+    i=0
+    for j in journalList:
+        journal.append(journalList[i].text)
+        i=i+1
+    return journal
 
 def authorNames(citeArray,url):
     allAuthors=[]
@@ -102,9 +123,30 @@ def authorNames(citeArray,url):
     soup3 = BeautifulSoup(html, 'html.parser')
     content = soup3.find('ol', class_='useLabel')
     authors = content.find_all('span', class_="NLM_contrib-group")
-    return authors
+    i=0
+    for t in authors:
+        allAuthors.append(authors[i].text)
+        i=i+1
+    return allAuthors
     # authDetail=[]
     # authArr=[]
+def NatureLink(html):
+    soup = BeautifulSoup(html,'html.parser')
+    paperLinksgoogleScholarnature = []
+    # creating an instance of the BeautifulSoup library
+    soup = BeautifulSoup(html, 'html.parser')
+    links = soup.find('ol', class_="c-article-references")
+    tags = links.find_all('a', {'data-track-action': 'google scholar reference'})
+    for tag in tags:
+        # creating a list containing the google scholar links for all the
+        paperLinksgoogleScholarnature.append(tag['href'])
+
+    for link in paperLinksgoogleScholarnature:
+        index = paperLinksgoogleScholarnature.index(link)
+        # print(index+1, link)
+    return paperLinksgoogleScholarnature
+
+
 def Springer(html):
     html = gettingUrl("https://link.springer.com/article/10.1007/s43673-022-00064-1")
     paperLinksgoogleScholarnature = []
@@ -119,6 +161,7 @@ def Springer(html):
     for link in paperLinksgoogleScholarnature:
         index = paperLinksgoogleScholarnature.index(link)
         print(index+1, link)
+
 def ScienceDirect(html):
     html = gettingUrl(
     "https://www.sciencedirect.com/science/article/pii/S2376060522000608")
@@ -235,35 +278,38 @@ def author_new(html):
     #     authArr.append(authors[-1])
     # return authArr
 
-# def authorName(scholarLinks):
-#     for link in scholarLinks:
-#         html = gettingUrl(link)
-#         soup3 = BeautifulSoup(html,'html.parser')
-#         content = soup3.find('div', class_="gs_a")
 
-#         if content == None:
-#             print("No Data Found")
-#         else:
-#             authors = content.find_all('a')
-#             print(authors[-1].text)
-#             name = content.text
-#             if "science" in name:
-#                 print("science")
-#             elif 'Wiley' in name:
-#                 print("wiley")
-#             elif 'nature' in name:
-#                 print("nature")
-#             elif 'sciencedirect' in name:
-#                 print("sciencedirect")
-#             elif 'Springer' in name:
-#                 print("Springer")
-#             elif 'Elsevier' in name:
-#                 print("Elsevier")
-#             elif 'mdpi' in name:
-#                 print("mdpi")
-#             elif 'ACS Publications' in name:
-#                 print("ACS Publications")
-#             elif 'ieee' in name:
-#                 print("ieee")
-#             else:
-#                 print("other")
+def Publication(link):
+    x = re.findall('www\.(.*?)\.', link)
+    return x
+    
+    # for link in scholarLinks:
+    #     html = gettingUrl(link)
+    #     soup3 = BeautifulSoup(html,'html.parser')
+    #     content = soup3.find('div', class_="gs_a")
+    #     if content == None:
+    #         print("No Data Found")
+    #     else:
+    #         authors = content.find_all('a')
+    #         print(authors[-1].text)
+    #         name = content.text
+    #         if "science" in name:
+    #             print("science")
+    #         elif 'Wiley' in name:
+    #             print("wiley")
+    #         elif 'nature' in name:
+    #             print("nature")
+    #         elif 'sciencedirect' in name:
+    #             print("sciencedirect")
+    #         elif 'Springer' in name:
+    #             print("Springer")
+    #         elif 'Elsevier' in name:
+    #             print("Elsevier")
+    #         elif 'mdpi' in name:
+    #             print("mdpi")
+    #         elif 'ACS Publications' in name:
+    #             print("ACS Publications")
+    #         elif 'ieee' in name:
+    #             print("ieee")
+    #         else:
+    #             print("other")

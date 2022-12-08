@@ -36,6 +36,7 @@
         <th scope="col">Journal Name</th>
         <th scope="col">Year</th>
         <th scope="col">Link (DOI)</th>
+        <th scope="col">Google scholar link</th>
       </tr>
     </thead>
     <tbody>
@@ -43,13 +44,13 @@
       {% for x in range(array| length) %}
       {% set c = c + 1 %}
       <tr>
-        <th scope="row">{{ loop.index }}</th>
-       
-        <td>{{author[x]}}</td>
-        <td><a href="{{array[x]}}" target="_blank"> click</td>
+          <td scope="row">{{ loop.index }}</td>
+          <td>{{author[x]}}</td>
           <td>{{titleAll[x]}}</td>
+          <td>{{journals[x]}}</td>
           <td>{{YearList[x]}}</td>
-          <td>{{DOIList[x]}}</td>
+          <td><a href="{{DOIList[x]}}" target="_blank">Go to article</a></td>
+          <td><a href="{{array[x]}}" target="_blank"> click</td>
       </tr>
      
       {% endfor %}
