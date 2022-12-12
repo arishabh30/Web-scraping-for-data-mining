@@ -1,6 +1,8 @@
 from flask import Flask, render_template, url_for, request
 from source import *
-
+import csv
+import numpy as np
+import pandas as pd
 app = Flask(__name__)
 
 @app.route("/", methods =["GET", "POST"])
@@ -12,41 +14,47 @@ def index():
         # gettingUrl("https://pubs.acs.org/doi/10.1021/acsnano.9b06394")
         html = gettingUrl(url)
         print(html)
-        citeArray = countAllLinksACS(html)
-        auth = authorNames(citeArray,url)
-        # print(auth)
-        titles = TitleAcs(html)
-        DOIs = AcsDoi(html)
-        # print(titles)
-        total=int(len(citeArray))
-        yearlist = AcsYear(html)
-        journalList = AcsJournal(html)
-        # x = Publication(url)
-        # print(x)
-        # # citeArray=[]
-        # auth=[]
-        # titles=[]
-        # DOIs=[]
-        # yearlist=[]
-        # journalList=[]
-        # total = 0
-        # if(x=='pubs'):
-        #     citeArray = countAllLinksACS(html)
-        #     auth = authorNames(citeArray,url)
-        #     # print(auth)
-        #     titles = TitleAcs(html)
-        #     DOIs = AcsDoi(html)
-        #     # print(titles)
-        #     total=int(len(citeArray))
-        #     yearlist = AcsYear(html)
-        #     journalList = AcsJournal(html)
-        # elif(x=='nature'):
+
+        #getting the if check
+
+        string = url.split(".")
+
+        if "springer" in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = Springer(html)
+        
+        elif "nature" in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html) 
+
+    
+
+            # auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html)
+            
+        # citeArray = countAllLinksACS(html)
+        # auth = authorNames(citeArray,url)
+        # # print(auth)
+        # titles = TitleAcs(html)
+        # DOIs = AcsDoi(html)
+        # # print(titles)
+        # total=int(len(citeArray))
+        # yearlist = AcsYear(html)
+        # journalList = AcsJournal(html)
+
+
+        
+
+        
+
+        # dict = {'Author':auth,'Title':titles,'Journal':journalList,'Year of publication':yearlist,'DOI number':DOIs,'Scholar Links':scholarLinks}
+
+        # df = pd.DataFrame(dict) 
+        # # saving the dataframe 
+        # df.to_csv('content.csv') 
             
       
         
         
 
-        return render_template('index.html', name=url, array=citeArray, author=auth, all=total, titleAll = titles,DOIList =DOIs, YearList = yearlist, journals = journalList)
+        return render_template('index.html', name=url, author=auth, titleAll = titles,DOIList =DOIs, YearList = yearlist, journals = journalList, array = scholarLinks)
     return render_template('index.html')
 
 if __name__ == "__main__":
