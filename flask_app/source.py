@@ -269,6 +269,64 @@ def Springer(html):
 
     return allLastAuthors, Titles, journalName, yearPublication, springerDOI, paperLinksgoogleScholar
 
+def Science(html):
+    # extraction from "Science" publication house.
+# html = gettingUrl("https://www.science.org/doi/10.1126/sciadv.abq2104")
+    paperLinksgoogleScholar = []
+    scienceDOI = []
+    toGetDeets = []
+    allLastAuthors = []
+    journalName = []
+    Titles = []
+    yearPublication = []
+    # creating an instance of the BeautifulSoup library
+    soup = BeautifulSoup(html, 'lxml')
+    tags = soup.find('section', {'id': 'bibliography'})
+    forLabels = tags.find_all("div", class_='label')
+
+    refNumber = len(forLabels)
+
+    i=0
+
+    content = tags.find_all('div', class_= "citation")
+    for con in content:
+        toGetDeets.append(con.find('div', class_='citation-content'))
+
+    for deet in toGetDeets:
+        if deet.find('em') == None:
+            journalName.append("No Data Found")
+        else:
+            journalName.append(deet.find('em').text)
+
+    for deet in toGetDeets:
+        detail = deet.text.split(',')
+        if ('(' in detail[-1]) == False:
+            yearPublication.append("No Data Found")
+        else:
+            yearPublication.append(detail[-1].split('(')[-1].split(')')[0])
+
+    for deet in toGetDeets:
+        Titles.append(deet.text)
+
+    for con in content:
+        link = con.find('a')
+        if link.text == "Crossref":
+            scienceDOI.append(link['href'])
+        else:
+            scienceDOI.append("No DOI")
+
+    for con in content:
+        link = con.find_all('a')
+        if (link[-1].text == "Google Scholar"):
+            paperLinksgoogleScholar.append(link[-1]['href'])
+        else:
+            paperLinksgoogleScholar.append("Google Scholar Link Not Found")
+
+    for i in range(0,refNumber):
+        allLastAuthors.append("Next Column for Authors")
+    
+    return allLastAuthors, Titles, journalName, yearPublication, scienceDOI, paperLinksgoogleScholar
+
 
 def Publication(link):
     x = re.findall('www\.(.*?)\.', link)

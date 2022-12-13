@@ -25,6 +25,9 @@ def index():
         elif "nature" in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html) 
 
+        elif "science" in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = Science(html)
+
     
 
             # auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html)
