@@ -28,7 +28,8 @@ def index():
         elif "science" in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = Science(html)
 
-    
+        elif "mdpi" in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = MDPI(html)
 
             # auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html)
             

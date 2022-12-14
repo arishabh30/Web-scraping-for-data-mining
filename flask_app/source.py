@@ -327,6 +327,59 @@ def Science(html):
     
     return allLastAuthors, Titles, journalName, yearPublication, scienceDOI, paperLinksgoogleScholar
 
+def MDPI(html):
+    paperLinksgoogleScholar = []
+    toGetDeets=[]
+    Titles=[]
+    mdpiDOI = []
+    allLastAuthors = []
+    journalName = []
+    yearPublication = []
+    # html = gettingUrl("https://www.mdpi.com/2226-4310/9/11/704/htm")
+    # creating an instance of the BeautifulSoup library
+    soup = BeautifulSoup(html, 'lxml')
+    tags = soup.find('ol', class_="html-xx")
+
+    refNumber = len(tags)
+
+    i = 0
+
+    for i in range(1, int(refNumber)+1):
+        content = tags.find('li', {'data-content': "{}".format(i)+'.'})
+
+        forName = content.find('span', class_="html-italic")
+
+        if forName == None:
+            journalName.append("No Data Found")
+        else:
+            journalName.append(forName.text)
+
+        forYear = content.find('b')
+        
+        if forYear == None:
+            yearPublication.append("No Data Found")
+        else:
+            yearPublication.append(forYear.text)
+
+        toGetDeets.append(content.text.split('[')[0])
+
+        if "CrossRef" in content.text:
+            mdpiDOI.append(content.find('a',class_='cross-ref')['href'])
+        else:
+            mdpiDOI.append("DOI not found")
+
+        if "Google Scholar" in content.text:
+            paperLinksgoogleScholar.append(content.find('a',class_='google-scholar')['href'])
+        else:
+            paperLinksgoogleScholar.append("Google Scholar Link not found")
+
+    for deet in toGetDeets:
+        detail = deet.split(';')[-1]
+        allLastAuthors.append(detail.split('.')[0])
+        Titles.append(detail.split('.')[:-2]) 
+    
+    return allLastAuthors, Titles, journalName, yearPublication, mdpiDOI, paperLinksgoogleScholar
+
 
 def Publication(link):
     x = re.findall('www\.(.*?)\.', link)
