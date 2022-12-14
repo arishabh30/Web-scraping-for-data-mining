@@ -380,6 +380,54 @@ def MDPI(html):
     
     return allLastAuthors, Titles, journalName, yearPublication, mdpiDOI, paperLinksgoogleScholar
 
+def IEEE(html):
+        # html = gettingUrl("https://ieeexplore.ieee.org/document/9837920/references#references")
+    paperLinksgoogleScholar = []
+
+    ieeeDOI = []
+    allLastAuthors = []
+    journalName = []
+    Titles = []
+    yearPublication = []
+    # creating an instance of the BeautifulSoup library
+    soup = BeautifulSoup(html, 'lxml')
+    tags = soup.find_all('div', class_='reference-container')
+    for tag in tags:
+
+        detail = tag.find('div',class_="col u-px-1")
+        fineDetail = detail.find('div')
+        
+        if fineDetail.find('em') == None:
+            journalName.append("No Data Found")
+        else:
+            journalName.append(fineDetail.find('em').text)
+
+        Titles.append(fineDetail.text.split('"')[-1])
+
+        if 'and' in fineDetail.text.split('"')[0]:
+            allLastAuthors.append(fineDetail.text.split('"')[0].split('and')[-1])
+        else:
+            allLastAuthors.append(fineDetail.text.split('"')[0])
+
+        yearPublication.append(fineDetail.text.split('"')[-1].split('.')[-2])
+
+        doi = tag.find('a', class_="stats-reference-link-crossRef")
+        doi_ieee = tag.find('a', class_="stats-reference-link-viewArticle")
+
+        if doi == None and doi_ieee == None:
+            ieeeDOI.append("No DOI")
+        elif doi == None:
+            ieeeDOI.append("https://ieeexplore.ieee.org"+doi_ieee['href'])
+        else:
+            ieeeDOI.append(doi['href'])
+
+        gscholar = tag.find('a', class_="stats-reference-link-googleScholar")
+        if gscholar == None:
+            paperLinksgoogleScholar.append("Google Scholar Link Not Found")
+        else:
+            paperLinksgoogleScholar.append(gscholar['href'])
+
+    return allLastAuthors, Titles, journalName, yearPublication, ieeeDOI, paperLinksgoogleScholar
 
 def Publication(link):
     x = re.findall('www\.(.*?)\.', link)

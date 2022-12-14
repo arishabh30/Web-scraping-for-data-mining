@@ -31,6 +31,10 @@ def index():
         elif "mdpi" in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = MDPI(html)
 
+        elif "ieee" in string:
+            url = url + "/references#references"
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = IEEE(html)
+
             # auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html)
             
         # citeArray = countAllLinksACS(html)
