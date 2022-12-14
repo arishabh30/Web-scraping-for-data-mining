@@ -466,7 +466,7 @@ def Cambridge(html):
         if links[-1].text == "Google Scholar":
             paperlinksgoogleScholar.append(links[-1]['href'])
         else:
-            paperlinksgoo.append(
+            paperlinksgoogleScholar.append(
                 "Google Scholar Link Not Found")
 
             yearPublication.append(toGetDeets.find('span', class_='year').text)
@@ -497,6 +497,48 @@ def Cambridge(html):
             allLastAuthors.append(auth[-1].text)
 
     return allLastAuthors, Titles, journalName, yearPublication, cambridgeDOI, paperlinksgoogleScholar
+
+def ScienceDirect(html):
+    # extraction from "Elsevier(sciencedirect)" publication house.
+    # html = gettingUrl("https://www.sciencedirect.com/science/article/pii/S2376060522000608")
+    paperLinksgoogleScholar = []
+    Titles =[]
+    scienceDirectDOI = []
+    journalName = []
+    links = []
+    allLastAuthors = []
+    yearPublication = []
+    # creating an instance of the BeautifulSoup library
+    soup = BeautifulSoup(html, 'lxml')
+    tags = soup.find_all('dd', class_="reference")
+
+    refNumber = len(tags)
+
+    i = 0
+
+    for i in range(1, int(refNumber)+1):
+        tag = soup.find('dd', {'id': 'sref'+"{}".format(i)})
+        Titles.append(tag.find('strong',class_="title").text)
+        journalName.append(tag.find('div',class_="host").text)
+        yearPublication.appendtag.find('div',class_="host").text.split(',')[-2].split('(')[-1].split(')')[0]
+        links = tag.find_all('a', class_="link")
+        if links[0].text == "Article":
+            scienceDirectDOI.append("https://www.sciencedirect.com/"+links[0]['href'])
+        else:
+            scienceDirectDOI.append("No DOI")
+
+        if links[-1].text == "Google Scholar":
+            paperLinksgoogleScholar.append(links[-1]['href'])
+        else:
+            paperLinksgoogleScholar.append("No Google Scholar Link")
+        
+        content = tag.find('div',class_="contribution").text.split(',')
+        if "et al" in content[-1]:
+            allLastAuthors.append(content[-2])
+        else:
+            allLastAuthors.append(content[-1].replace(Titles[i-1]," "))
+        i+=1
+    return allLastAuthors, Titles, journalName, yearPublication, scienceDirectDOI, paperLinksgoogleScholar   
 
 def Publication(link):
     x = re.findall('www\.(.*?)\.', link)

@@ -10,12 +10,8 @@ def index():
     if request.method == "POST":
         url = request.form.get("enteredurl")
         print(url)
-        # val = request.form.get("cite")
-        # gettingUrl("https://pubs.acs.org/doi/10.1021/acsnano.9b06394")
         html = gettingUrl(url)
         print(html)
-
-        #getting the if check
 
         string = url.split(".")
 
@@ -25,7 +21,7 @@ def index():
         elif "nature" in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html) 
 
-        elif "science" in string:
+        elif "science" in string and "sciencedirect" not in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = Science(html)
 
         elif "mdpi" in string:
@@ -37,8 +33,9 @@ def index():
         
         elif 'cambridge' in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = Cambridge(html)
-
-            # auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html)
+        
+        elif 'sciencedirect' in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = ScienceDirect(html)
             
         # citeArray = countAllLinksACS(html)
         # auth = authorNames(citeArray,url)
