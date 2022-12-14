@@ -429,6 +429,75 @@ def IEEE(html):
 
     return allLastAuthors, Titles, journalName, yearPublication, ieeeDOI, paperLinksgoogleScholar
 
+def Cambridge(html):
+    # extraction from "Cambridge publishing house" publication house.
+    # html = gettingUrl("https://www.cambridge.org/core/journals/advances-in-archaeological-practice/article/professionalcollector-collaboration/8DB3D024A682DEC74457D6D5708B8D73")
+    paperlinksgoogleScholar = []
+    content_list = []
+    allLastAuthors = []
+    Titles = []
+    yearPublication = []
+    journalName = []
+    cambridgeDOI = []
+    allAuthors = []
+
+    # creating an instance of the BeautifulSoup library
+    soup = BeautifulSoup(html, 'lxml')
+    tags = soup.find('div', {'id': 'references-list'})
+    for tag in tags:
+        content_list.append(tag)
+
+    content = content_list[3:]
+    refNumber = len(content)
+
+    i = 0
+
+    for i in range(2, refNumber+2):
+        toGetDeets = content[i-2].find('div',
+                                    {'id': 'reference-'+"{}".format(i)+'-content'})
+
+        link = toGetDeets.find('a', class_='ref-link')
+        links = toGetDeets.find_all('a', class_='ref-link')
+        if link.text == "CrossRef":
+            cambridgeDOI.append(link['href'])
+        else:
+            cambridgeDOI.append("No DOI")
+
+        if links[-1].text == "Google Scholar":
+            paperlinksgoogleScholar.append(links[-1]['href'])
+        else:
+            paperlinksgoo.append(
+                "Google Scholar Link Not Found")
+
+            yearPublication.append(toGetDeets.find('span', class_='year').text)
+
+        if toGetDeets.find('span', class_='article-title') != None:
+            Titles.append(toGetDeets.find('span', class_='article-title').text)
+        else:
+            Titles.append("No data found")
+
+        if toGetDeets.find('span', class_='publisher-name') != None:
+            journalName.append(toGetDeets.find(
+                'span', class_='publisher-name').text)
+        elif toGetDeets.find('span', class_='source') != None:
+            journalName.append(toGetDeets.find('span', class_='source').text)
+        else:
+            journalName.append("No Data Found")
+
+        # print(toGetDeets)
+        author = toGetDeets.find_all('span', class_='string-name')
+        allAuthors.append(author)
+
+    for auth in allAuthors:
+        if auth == []:
+            allLastAuthors.append("No Data Found")
+        elif len(auth) == 1:
+            allLastAuthors.append(auth[0].text)
+        else:
+            allLastAuthors.append(auth[-1].text)
+
+    return allLastAuthors, Titles, journalName, yearPublication, cambridgeDOI, paperlinksgoogleScholar
+
 def Publication(link):
     x = re.findall('www\.(.*?)\.', link)
     return x

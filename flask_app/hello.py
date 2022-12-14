@@ -34,6 +34,9 @@ def index():
         elif "ieee" in string:
             url = url + "/references#references"
             auth, titles, journalList, yearlist, DOIs, scholarLinks = IEEE(html)
+        
+        elif 'cambridge' in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = Cambridge(html)
 
             # auth, titles, journalList, yearlist, DOIs, scholarLinks = Nature(html)
             
