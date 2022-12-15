@@ -36,16 +36,8 @@ def index():
         
         elif 'sciencedirect' in string:
             auth, titles, journalList, yearlist, DOIs, scholarLinks = ScienceDirect(html)
-            
-        # citeArray = countAllLinksACS(html)
-        # auth = authorNames(citeArray,url)
-        # # print(auth)
-        # titles = TitleAcs(html)
-        # DOIs = AcsDoi(html)
-        # # print(titles)
-        # total=int(len(citeArray))
-        # yearlist = AcsYear(html)
-        # journalList = AcsJournal(html)
+        elif 'acs' in string:
+            auth, titles, journalList, yearlist, DOIs, scholarLinks = ACS(html)
 
 
         
