@@ -5,22 +5,19 @@
 
 {% block body %}
 <div class="main-body">
-  <form method="post" action="/">
-    <div class="row">
-      <div class="col">
-        <input type="text" class="form-control" placeholder="Name" name="enteredurl" id='url' required />
-        <label for="url" class="form__label">Enter URL</label> <br />
-      </div>
+  <!-- <form method="post" action="/">
+    <div class="row"> -->
+     
       <!-- <div class="col">
         <input type="number" class="form-control" placeholder="enter citation number" name="cite" id="citeId" required />
     <label for="citeId" class="form__label">Enter minimum number of citations</label><br/>
     
       </div> -->
-      <div class="col">
+      <!-- <div class="col">
         <button class="btn btn-dark" type="submit"> Enter URL </button>
       </div>
     </div>
-</form>
+</form> -->
   </div>
   {{name}} <br/>
   
@@ -37,7 +34,7 @@
         <th scope="col">Year</th>
         <th scope="col">Link (DOI)</th>
         <th scope="col">Google scholar link</th>
-        <th scope="col">Link Daughter11</th>
+        <th scope="col">Link Daugr</th>
       </tr>
     </thead>
     <tbody>
@@ -50,19 +47,9 @@
           <td>{{titleAll[x]}}</td>
           <td>{{journals[x]}}</td>
           <td>{{YearList[x]}}</td>
-          {% set url_sent = DOIList[x].split("/") %}
-          {% set url_passed = "$".join(url_sent) %}
           <td><a href="{{DOIList[x]}}" target="_blank">Go to article</a></td>
-          <td><a href="{{array[x]}}" target="_blank"> click</a></td>
-          <td>
-            <!-- <a href="/{{x}}" target="_blank"> click</a> -->
-            <form action="/search" method="get" autocomplete="off" class="subscribe-form">
-              <div class="form-group d-flex">
-                  <input type="text" class="form-control" placeholder="Enter your search" name="q" id="q" value="{{DOIList[x]}}">
-                  <a target="_blank"><button type="submit" class="submit px-3"> click </button></a>
-              </div>
-          </form>
-          </td>
+          <td><a href="{{array[x]}}" target="_blank"> click</td>
+          <td><a href="{{array[x]}}" target="_blank"> click</td>
       </tr>
      
       {% endfor %}
