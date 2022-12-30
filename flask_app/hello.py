@@ -24,11 +24,15 @@ def home(doi_link):
     seperate1 = link.split('https:$$doi.org$')
     print(seperate1)
     print(url)
-    html = gettingUrl(url)
 
     # print(html)
 
-    string = url.split('.')
+    # if "doi.org" in str(url):
+    url_new = convert_to_actual_url(str(url))
+    # else:
+    #     url_new = url
+    html = gettingUrl(url_new)
+    string = url_new.split('.')
     if 'springer' in string:
         (
             auth,

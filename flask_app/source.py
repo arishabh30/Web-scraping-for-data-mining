@@ -44,6 +44,30 @@ def gettingUrl(url):
     print("URL "+url)
     return html
 
+def convert_to_actual_url(doi_url): 
+    options = Options()
+    options.headless = True
+    options.add_argument("--proxy-server='direct://'")
+    options.add_argument("--proxy-bypass-list=*")
+    options.add_argument("--start-maximized")
+    options.add_argument("--disable-gpu")
+    options.add_argument('--lang=en_US')
+    options.add_argument("--window-size=1920,1080")
+    options.add_argument("--ignore-certificate-errors")
+    options.add_argument("--disable-extensions")
+    options.add_argument(
+        "--user-agent=Mozilla/5.0 (Macintosh; Intel Mac OS X 10_13_6) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/73.0.3683.86 Safari/537.36")
+    options.add_argument("--no-sandbox")
+    options.add_argument(f"user-agent=[userAgent]")
+    options.add_argument("--disable-dev-shm-usage")
+
+    driver = webdriver.Chrome(service=Service(
+        ChromeDriverManager().install()), options=options)
+    driver.get(doi_url)
+
+    time.sleep(5)
+
+    return driver.current_url
 
 def Nature(html):
     # Extraction from "Nature" publication house.
