@@ -1,4 +1,0 @@
-make different functions for while scraping with google scholar and the publications:
-with google scholar : rotate proxy;
-with publications : come back to the iitk server
-in case of IEEE : update the link eveytime with an if check, that would be done already anyways, by adding "references/#references" at the end. 
