@@ -10,7 +10,7 @@ Add the weekly progress to the following [ppt](https://docs.google.com/presentat
          In the terminal, type `python3 -v`
 3. Install pip in your **Ubuntu** system if not present using `sudo apt-get install python3-pip`
 3. Move into the project directory, here directory is named **flask_app**
-4. Install virtualenv using
+4. Install venv using
      - For Windows:
              type `pip install venv`
      - For Ubuntu:
