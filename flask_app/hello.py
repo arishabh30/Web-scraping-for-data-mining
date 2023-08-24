@@ -41,6 +41,7 @@ def home(doi_link):
             yearlist,
             DOIs,
             scholarLinks,
+            # Data
             ) = Springer(html)
     elif 'nature' in string:
 
@@ -127,6 +128,7 @@ def home(doi_link):
         YearList=yearlist,
         journals=journalList,
         array=scholarLinks,
+        # DOICited=Data
         )
 
 
@@ -149,6 +151,7 @@ def index():
                 yearlist,
                 index.DOIList_main,
                 scholarLinks,
+                # Data
                 ) = Springer(html)
         elif 'nature' in string:
 
@@ -235,6 +238,7 @@ def index():
             YearList=yearlist,
             journals=journalList,
             array=scholarLinks,
+            # DOICited=Data
             )
     return render_template('index.html')
 

@@ -4,6 +4,7 @@ import re
 import requests
 import time
 import array as arr
+import csv
 from bs4 import BeautifulSoup
 from selenium import webdriver
 from selenium.webdriver.common.keys import Keys
@@ -15,6 +16,42 @@ from flask import request
 from selenium.webdriver.chrome.service import Service
 from selenium.webdriver.chrome.options import Options
 # from fake_useragent import UserAgent
+
+def save_to_csv(allLastAuthors, Titles, journalName, yearPublication, springerDOI, paperLinksgoogleScholar, filename):
+    with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(["Last Author", "Title", "Journal Name", "Year Publication", "Springer DOI", "Google Scholar Link"])
+        
+        max_length = max(
+        len(allLastAuthors),
+        len(Titles),
+        len(journalName),
+        len(yearPublication),
+        len(springerDOI),
+        len(paperLinksgoogleScholar),
+        # len(DOICited)
+    )
+        
+        # Pad arrays to the maximum length to ensure columns align
+        allLastAuthors += [""] * (max_length - len(allLastAuthors))
+        Titles += [""] * (max_length - len(Titles))
+        journalName += [""] * (max_length - len(journalName))
+        yearPublication += [""] * (max_length - len(yearPublication))
+        springerDOI += [""] * (max_length - len(springerDOI))
+        paperLinksgoogleScholar += [""] * (max_length - len(paperLinksgoogleScholar))
+        # DOICited += [""] * (max_length - len(DOICited))
+        
+        # Write rows to CSV
+        for i in range(max_length):
+            writer.writerow([
+                allLastAuthors[i],
+                Titles[i],
+                journalName[i],
+                yearPublication[i],
+                springerDOI[i],
+                paperLinksgoogleScholar[i],
+                # DOICited[i]
+            ])
 
 
 def gettingUrl(url):
@@ -136,8 +173,13 @@ def Nature(html):
             allLastAuthors.append(allAuthorsList[-2])
         else:
             allLastAuthors.append(allAuthorsList[-1])
+        
+    csv_filename = "nature_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, natureDOI, paperLinksgoogleScholarnature, csv_filename)
+    print(f"Data saved to {csv_filename}")
 
     return allLastAuthors, Titles, journalName, yearPublication, natureDOI, paperLinksgoogleScholarnature
+
 
 
 def Springer(html):
@@ -161,6 +203,9 @@ def Springer(html):
 
     # to get the doi of the references.
     springerDOI = []
+    DOICited = []
+
+    
 
     i = 0
 
@@ -169,12 +214,26 @@ def Springer(html):
 
         if doiLinks == None:
             springerDOI.append("No DOI")
+            # DOICited.append("---")
         else:
             springerDOI.append(doiLinks['href'])
+            # DOICited.append(doiLinks['href'])
         i += 1
+    cite = 0
+    pattern = r"https://doi.org/(.+)"
+
+    for cite in range(int(refNumber)):
+        match = re.search(pattern, springerDOI[cite])
+        if match:
+            extracted_text = match.group(1)
+            DOICited.append(extracted_text)
+        else:
+            DOICited.append("Not Found")
+        cite += 1
+    # print(DOICited)
 
     # print(springerDOI)
-
+    # "Cited DOI"
     # extracting the authors from the main page itself.
     text = soup.find_all('ol', class_='c-article-references')
     text_main = soup.find_all(
@@ -212,6 +271,12 @@ def Springer(html):
             year_new = year[-1].split(')')
             # gets the year of publication of the references
             yearPublication.append(year_new[0])
+
+
+    csv_filename = "springer_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, springerDOI, paperLinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
+
 
     return allLastAuthors, Titles, journalName, yearPublication, springerDOI, paperLinksgoogleScholar
 
@@ -271,6 +336,10 @@ def Science(html):
 
     for i in range(0, refNumber):
         allLastAuthors.append("Next Column for Authors")
+    
+    csv_filename = "science_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, scienceDOI, paperLinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
 
     return allLastAuthors, Titles, journalName, yearPublication, scienceDOI, paperLinksgoogleScholar
 
@@ -327,6 +396,10 @@ def MDPI(html):
         allLastAuthors.append(detail.split('.')[0])
         Titles.append(detail.split('.')[:-2])
 
+    csv_filename = "mdpi_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, mdpiDOI, paperLinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
+
     return allLastAuthors, Titles, journalName, yearPublication, mdpiDOI, paperLinksgoogleScholar
 
 
@@ -377,7 +450,9 @@ def IEEE(html):
             paperLinksgoogleScholar.append("Google Scholar Link Not Found")
         else:
             paperLinksgoogleScholar.append(gscholar['href'])
-
+    csv_filename = "ieee_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, ieeeDOI, paperLinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
     return allLastAuthors, Titles, journalName, yearPublication, ieeeDOI, paperLinksgoogleScholar
 
 
@@ -447,6 +522,9 @@ def Cambridge(html):
             allLastAuthors.append(auth[0].text)
         else:
             allLastAuthors.append(auth[-1].text)
+    csv_filename = "cambridge_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, cambridgeDOI, paperlinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
 
     return allLastAuthors, Titles, journalName, yearPublication, cambridgeDOI, paperlinksgoogleScholar
 
@@ -473,8 +551,7 @@ def ScienceDirect(html):
         tag = soup.find('dd', {'id': 'sref'+"{}".format(i)})
         Titles.append(tag.find('strong', class_="title").text)
         journalName.append(tag.find('div', class_="host").text)
-        yearPublication.appendtag.find('div', class_="host").text.split(
-            ',')[-2].split('(')[-1].split(')')[0]
+        yearPublication.append(tag.find('div', class_="host").text.split(',')[-2].split('(')[-1].split(')')[0])
         links = tag.find_all('a', class_="link")
         if links[0].text == "Article":
             scienceDirectDOI.append(
@@ -493,6 +570,10 @@ def ScienceDirect(html):
         else:
             allLastAuthors.append(content[-1].replace(Titles[i-1], " "))
         i += 1
+
+    csv_filename = "sciencedirect_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, scienceDirectDOI, paperLinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
     return allLastAuthors, Titles, journalName, yearPublication, scienceDirectDOI, paperLinksgoogleScholar
 
 
@@ -550,6 +631,10 @@ def ACS(html):
             var = ' '.join(x)
             acsDOI.append("".join([new, var]))
         j += 1
+
+    csv_filename = "acs_data.csv"
+    save_to_csv(allLastAuthors, Titles, journalName, yearPublication, acsDOI, paperlinksgoogleScholar, csv_filename)
+    print(f"Data saved to {csv_filename}")
     return allLastAuthors, Titles, journalName, yearPublication, acsDOI, paperlinksgoogleScholar
 
 
