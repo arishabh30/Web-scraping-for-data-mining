@@ -34,6 +34,6 @@ Add the weekly progress to the following [ppt](https://docs.google.com/presentat
           - This will create a `requirements.txt` file
       - Now run this command to install all the libraries required to run the program `pip install -r requirements.txt`
 10. Now to execute the code:
-      - For Windows : `set FLASK_APP=hello.py` followed by `flask run`
+      - For Windows : `set FLASK_APP=hello.py` or `$env:FLASK_APP="hello.py" followed by `flask run`
       - For Ubuntu : `export FLASK_APP=hello.py` followed by `flask run`
        
